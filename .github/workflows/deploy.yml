@@ -1,0 +1,49 @@
+name: Deploy til Mac Mini Homeserver
+
+# Denne workflow kræver en self-hosted runner på din Mac mini
+# Se README.md for setup instruktioner
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Tillader manuel trigger
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # Kører på din Mac mini
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Docker status
+        run: |
+          if ! docker info > /dev/null 2>&1; then
+            echo "❌ Docker kører ikke"
+            exit 1
+          fi
+          echo "✅ Docker kører"
+
+      - name: Pull nye Docker images
+        run: docker-compose pull
+
+      - name: Stop eksisterende containers
+        run: docker-compose down
+
+      - name: Start containers
+        run: docker-compose up -d
+
+      - name: Vent på services
+        run: sleep 10
+
+      - name: Check status
+        run: docker-compose ps
+
+      - name: Deployment success
+        run: |
+          echo "✅ Deployment gennemført!"
+          echo "Services er tilgængelige på:"
+          echo "  - n8n: http://localhost:5678"
+          echo "  - NocoDB: http://localhost:8080"
+          echo "  - Nextcloud: http://localhost:8081"

@@ -1,0 +1,40 @@
+# Environment variables (indeholder følsomme data)
+.env
+
+# Backup filer
+backups/
+*.tar.gz
+
+# Docker volumes
+postgres_data/
+n8n_data/
+nocodb_data/
+nextcloud_data/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# System filer
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# IDE/Editor filer
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
