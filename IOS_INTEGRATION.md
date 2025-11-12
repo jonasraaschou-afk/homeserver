@@ -2,6 +2,15 @@
 
 Alt du kan lave med din iPhone og din homeserver!
 
+## 🎯 Din Setup
+
+- **Dashboard:** https://home.kobber.me
+- **n8n:** https://n8n.kobber.me
+- **NocoDB:** https://nocodb.kobber.me
+- **Nextcloud:** https://cloud.kobber.me
+
+---
+
 ## 🎯 Muligheder
 
 1. **PWA App** - Installer dashboard som en app
@@ -20,7 +29,7 @@ Dit dashboard er nu en **Progressive Web App**! Det betyder du kan installere de
 ### Sådan Gør Du:
 
 1. **Åbn Safari på din iPhone**
-   - Gå til: `https://kobber.me` (eller `https://home.kobber.me`)
+   - Gå til: **https://home.kobber.me**
 
 2. **Tryk på "Del" knappen** (firkant med pil op)
 
