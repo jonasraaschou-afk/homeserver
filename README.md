@@ -4,6 +4,7 @@ Et komplet Docker-baseret homeserver setup til Mac mini med n8n, PostgreSQL, Noc
 
 ## 📚 Guides
 
+- **[INSTALLATION.md](INSTALLATION.md)** - Trin-for-trin installations guide
 - **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** - Automatisk deployment fra GitHub til Docker
 - **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)** - Detaljeret Cloudflare Tunnel opsætning
 
@@ -17,53 +18,49 @@ Et komplet Docker-baseret homeserver setup til Mac mini med n8n, PostgreSQL, Noc
 
 ## 🚀 Hurtig Start
 
-### 1. Forudsætninger
+### Forudsætning: Installer Docker Desktop
 
-Installer Docker Desktop på din Mac mini:
 ```bash
 brew install --cask docker
 ```
 
 Eller download fra: https://www.docker.com/products/docker-desktop
 
-### 2. Klon Repository
+### Metode 1: Automatisk Installation (Anbefalet) ⚡
 
 ```bash
+# Klon repository
 git clone https://github.com/jonasraaschou-afk/homeserver.git
 cd homeserver
+
+# Kør installations script
+./install.sh
 ```
 
-### 3. Konfigurer Environment Variables
+**Scriptet gør alt for dig:**
+- ✅ Verificerer Docker
+- ✅ Opretter .env fil
+- ✅ Downloader images
+- ✅ Starter services
+- ✅ Verificerer status
+
+### Metode 2: Manuel Installation
+
+Se detaljeret guide: **[INSTALLATION.md](INSTALLATION.md)**
+
+## 🌐 Efter Installation
+
+### Opsæt Cloudflare Tunnel (Valgfrit)
+
+For internet adgang med HTTPS, se: **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)**
+
+### Opsæt Automatisk Opdatering
 
 ```bash
-cp .env.example .env
-nano .env  # Rediger med dine egne værdier
+./setup-auto-update.sh
 ```
 
-**Vigtigt:** Skift alle passwords og secrets i `.env` filen!
-
-### 4. Opsæt Cloudflare Tunnel
-
-For detaljeret trin-for-trin guide, se **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)**
-
-**Kort version:**
-1. Opret Cloudflare Tunnel i Zero Trust Dashboard
-2. Kopier tunnel token til `.env` fil
-3. Konfigurer public hostnames for hver service
-4. Opdater service URLs i `.env` til dine domæner
-
-### 5. Start Serveren
-
-```bash
-docker-compose up -d
-```
-
-### 6. Verificer Status
-
-```bash
-docker-compose ps
-docker-compose logs -f
-```
+Se også: **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)**
 
 ## 🔐 Standard Login Credentials
 
