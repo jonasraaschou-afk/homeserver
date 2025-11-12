@@ -2,6 +2,11 @@
 
 Et komplet Docker-baseret homeserver setup til Mac mini med n8n, PostgreSQL, NocoDB, Nextcloud og Cloudflare Tunnel.
 
+## 📚 Guides
+
+- **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** - Automatisk deployment fra GitHub til Docker
+- **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)** - Detaljeret Cloudflare Tunnel opsætning
+
 ## 📋 Services
 
 - **PostgreSQL 15** - Fælles database for alle services
@@ -39,49 +44,13 @@ nano .env  # Rediger med dine egne værdier
 
 ### 4. Opsæt Cloudflare Tunnel
 
-#### Trin-for-trin guide:
+For detaljeret trin-for-trin guide, se **[CLOUDFLARE_SETUP.md](CLOUDFLARE_SETUP.md)**
 
-1. **Opret Cloudflare Account**
-   - Gå til https://dash.cloudflare.com
-   - Opret en gratis konto hvis du ikke har en
-
-2. **Opret et Tunnel**
-   - Gå til "Zero Trust" → "Networks" → "Tunnels"
-   - Klik på "Create a tunnel"
-   - Vælg "Cloudflared" som connector type
-   - Giv tunnelen et navn (f.eks. "homeserver-mac-mini")
-
-3. **Få Tunnel Token**
-   - Efter oprettelse får du et token
-   - Kopier tokenet og indsæt det i `.env` filen:
-     ```
-     CLOUDFLARE_TUNNEL_TOKEN=eyJhIjoiZGlnLXRva2VuLWhlciJ9...
-     ```
-
-4. **Konfigurer Public Hostnames**
-   I Cloudflare Zero Trust Dashboard:
-
-   - **n8n**:
-     - Public hostname: `n8n.ditdomæne.com`
-     - Service: `http://n8n:5678`
-
-   - **NocoDB**:
-     - Public hostname: `nocodb.ditdomæne.com`
-     - Service: `http://nocodb:8080`
-
-   - **Nextcloud**:
-     - Public hostname: `cloud.ditdomæne.com`
-     - Service: `http://nextcloud:80`
-
-5. **Opdater Service URLs i .env**
-   ```bash
-   N8N_HOST=n8n.ditdomæne.com
-   N8N_PROTOCOL=https
-   N8N_WEBHOOK_URL=https://n8n.ditdomæne.com/
-   NOCODB_PUBLIC_URL=https://nocodb.ditdomæne.com
-   NEXTCLOUD_TRUSTED_DOMAINS=cloud.ditdomæne.com
-   NEXTCLOUD_PROTOCOL=https
-   ```
+**Kort version:**
+1. Opret Cloudflare Tunnel i Zero Trust Dashboard
+2. Kopier tunnel token til `.env` fil
+3. Konfigurer public hostnames for hver service
+4. Opdater service URLs i `.env` til dine domæner
 
 ### 5. Start Serveren
 
@@ -114,28 +83,23 @@ docker-compose logs -f
 
 ## 🔄 Automatisk Deployment fra GitHub
 
-### Opsæt GitHub Actions (Anbefalet)
+Se den komplette guide: **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)**
 
-For automatisk deployment når du pusher til GitHub, skal du:
+**To måder at sætte det op:**
 
-1. **På din Mac mini:**
-   ```bash
-   # Kør deployment scriptet
-   ./deploy.sh
-   ```
+### Metode 1: Auto-Update Script (Simpel - Anbefalet)
+```bash
+./setup-auto-update.sh
+```
+Checker automatisk GitHub hvert 5. minut og opdaterer hvis nødvendigt.
 
-2. **Eller brug GitHub Actions** (kræver self-hosted runner):
-   - Installer GitHub Actions runner på din Mac mini
-   - Følg guiden: https://docs.github.com/en/actions/hosting-your-own-runners
+### Metode 2: GitHub Actions (Avanceret)
+Øjeblikkelig deployment ved push til GitHub. Kræver GitHub Actions runner på Mac mini.
 
 ### Manuel Deployment
-
-På din Mac mini:
 ```bash
 cd ~/homeserver
-git pull origin main
-docker-compose down
-docker-compose up -d
+./deploy.sh
 ```
 
 ## 📦 Data Persistens
