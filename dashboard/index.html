@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kobber.me Homeserver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .service-status {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 5px 15px;
+            background: rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.8;
+            animation: fadeIn 1s ease;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: 0.3s;
+        }
+
+        footer a:hover {
+            border-bottom-color: white;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()">🌓 Theme</div>
+
+    <div class="container">
+        <header>
+            <h1>🏠 Kobber.me</h1>
+            <p>Din personlige homeserver dashboard</p>
+        </header>
+
+        <div class="services-grid">
+            <!-- n8n -->
+            <a href="https://n8n.kobber.me" class="service-card" target="_blank">
+                <span class="service-icon">⚡</span>
+                <div class="service-title">n8n</div>
+                <div class="service-description">
+                    Workflow automation platform. Automatiser alt fra data synkronisering til notifikationer.
+                </div>
+                <div class="service-status">
+                    <span class="status-dot"></span> Online
+                </div>
+            </a>
+
+            <!-- NocoDB -->
+            <a href="https://nocodb.kobber.me" class="service-card" target="_blank">
+                <span class="service-icon">📊</span>
+                <div class="service-title">NocoDB</div>
+                <div class="service-description">
+                    No-code database platform. Opret og administrer databaser med et smart interface.
+                </div>
+                <div class="service-status">
+                    <span class="status-dot"></span> Online
+                </div>
+            </a>
+
+            <!-- Nextcloud -->
+            <a href="https://cloud.kobber.me" class="service-card" target="_blank">
+                <span class="service-icon">☁️</span>
+                <div class="service-title">Nextcloud</div>
+                <div class="service-description">
+                    Cloud storage og collaboration. Gem og del filer sikkert i skyen.
+                </div>
+                <div class="service-status">
+                    <span class="status-dot"></span> Online
+                </div>
+            </a>
+
+            <!-- Tilføj flere services her -->
+            <a href="#" class="service-card" style="opacity: 0.6; cursor: not-allowed;" onclick="return false;">
+                <span class="service-icon">➕</span>
+                <div class="service-title">Tilføj Service</div>
+                <div class="service-description">
+                    Klar til at tilføje flere services til din homeserver?
+                </div>
+                <div class="service-status" style="background: rgba(148, 163, 184, 0.3); border-color: rgba(148, 163, 184, 0.5);">
+                    <span class="status-dot" style="background: #94a3b8; animation: none;"></span> Kommer snart
+                </div>
+            </a>
+        </div>
+
+        <footer>
+            <p>Drevet af Docker 🐳 | Beskyttet af Cloudflare 🔒</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <a href="https://github.com/jonasraaschou-afk/homeserver" target="_blank">📚 Dokumentation</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const currentBg = body.style.background;
+
+            if (currentBg.includes('667eea')) {
+                body.style.background = 'linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)';
+            } else {
+                body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+        }
+
+        // Check service status (optional - requires backend)
+        async function checkServiceStatus() {
+            const services = ['n8n', 'nocodb', 'cloud'];
+
+            for (const service of services) {
+                try {
+                    const response = await fetch(`https://${service}.kobber.me`, { mode: 'no-cors' });
+                    console.log(`${service}: Online`);
+                } catch (error) {
+                    console.log(`${service}: Offline`);
+                }
+            }
+        }
+
+        // Check status on load (optional)
+        // checkServiceStatus();
+    </script>
+</body>
+</html>

@@ -98,6 +98,18 @@ services:
       postgres:
         condition: service_healthy
 
+  # Dashboard - Landing page til alle services
+  dashboard:
+    image: nginx:alpine
+    container_name: homeserver-dashboard
+    restart: unless-stopped
+    ports:
+      - "${DASHBOARD_PORT:-8082}:80"
+    volumes:
+      - ./dashboard:/usr/share/nginx/html:ro
+    networks:
+      - homeserver-network
+
   # Cloudflare Tunnel - Sikker adgang til internettet
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -112,6 +124,7 @@ services:
       - n8n
       - nocodb
       - nextcloud
+      - dashboard
 
 networks:
   homeserver-network:
