@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="version" content="2.0-apple-design">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Kobber.me</title>
 
     <!-- PWA Meta Tags -->
@@ -18,7 +22,7 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%230a84ff;stop-opacity:1' /><stop offset='100%' style='stop-color:%235e5ce6;stop-opacity:1' /></linearGradient></defs><rect fill='url(%23grad)' width='180' height='180' rx='40'/><text y='125' x='90' text-anchor='middle' font-size='90' fill='white' font-family='SF Pro Display'>🏠</text></svg>">
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json?v=2">
 
     <style>
         /* Apple System Font */
@@ -610,10 +614,26 @@
     </div>
 
     <script>
-        // PWA Service Worker
+        // PWA Service Worker with auto-reload on update
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
+                navigator.serviceWorker.register('sw.js?v=2')
+                    .then(registration => {
+                        // Check for updates every 60 seconds
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000);
+
+                        // Reload when new service worker takes control
+                        let refreshing = false;
+                        navigator.serviceWorker.addEventListener('controllerchange', () => {
+                            if (!refreshing) {
+                                refreshing = true;
+                                window.location.reload();
+                            }
+                        });
+                    })
+                    .catch(() => {});
             });
         }
 
