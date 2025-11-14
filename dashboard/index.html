@@ -698,52 +698,20 @@
     </div>
 
     <script>
-        // Force clear all service workers and caches
+        // Disable service workers completely for now
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', async () => {
-                // Unregister ALL service workers first
-                const registrations = await navigator.serviceWorker.getRegistrations();
+            navigator.serviceWorker.getRegistrations().then(registrations => {
                 for (let registration of registrations) {
-                    await registration.unregister();
-                }
-
-                // Clear ALL caches
-                if ('caches' in window) {
-                    const cacheNames = await caches.keys();
-                    await Promise.all(cacheNames.map(name => caches.delete(name)));
-                }
-
-                // Register new service worker
-                try {
-                    const registration = await navigator.serviceWorker.register('sw.js?v=4&t=' + Date.now());
-
-                    // Check for updates every 60 seconds
-                    setInterval(() => {
-                        registration.update();
-                    }, 60000);
-
-                    // Reload when new service worker takes control
-                    let refreshing = false;
-                    navigator.serviceWorker.addEventListener('controllerchange', () => {
-                        if (!refreshing) {
-                            refreshing = true;
-                            window.location.reload();
-                        }
-                    });
-                } catch (e) {
-                    console.log('Service worker registration failed:', e);
+                    registration.unregister();
                 }
             });
         }
 
-        // Force version check and reload if old
-        const CURRENT_VERSION = '4.0-liquid-glass-force';
-        const storedVersion = localStorage.getItem('app-version');
-        if (storedVersion && storedVersion !== CURRENT_VERSION) {
-            localStorage.setItem('app-version', CURRENT_VERSION);
-            window.location.reload(true);
-        } else {
-            localStorage.setItem('app-version', CURRENT_VERSION);
+        // Clear all caches once
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+            });
         }
 
         // Theme Toggle
