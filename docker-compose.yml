@@ -166,6 +166,7 @@ services:
     ports:
       - "${STRAPI_PORT:-1337}:1337"
     environment:
+      - NODE_ENV=production
       - DATABASE_CLIENT=postgres
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
@@ -178,13 +179,8 @@ services:
       - APP_KEYS=${STRAPI_APP_KEYS}
       - API_TOKEN_SALT=${STRAPI_API_TOKEN_SALT}
       - TRANSFER_TOKEN_SALT=${STRAPI_TRANSFER_TOKEN_SALT}
-      - SMTP_HOST=${SMTP_HOST:-}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USERNAME=${SMTP_USERNAME:-}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
-      - SMTP_FROM=${STRAPI_MAIL_FROM:-noreply@kobber.me}
     volumes:
-      - strapi_data:/srv/app
+      - strapi_data:/opt/app
     networks:
       - homeserver-network
     depends_on:
