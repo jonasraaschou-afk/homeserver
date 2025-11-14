@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="version" content="5.0-apple-liquid-glass-official">
+    <meta name="version" content="5.1-click-fix">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -259,6 +259,7 @@
             );
             opacity: 0;
             transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
 
         .widget:hover {
@@ -437,6 +438,8 @@
                 0 4px 16px rgba(10, 132, 255, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2),
                 inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
         }
 
         .button:hover {
@@ -480,7 +483,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
         .view-button:hover {
