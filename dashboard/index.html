@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="version" content="4.0-liquid-glass-force">
+    <meta name="version" content="5.0-apple-liquid-glass-official">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, s-maxage=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -41,11 +41,16 @@
         }
 
         :root {
-            /* Apple Liquid Glass Colors */
-            --glass-blue: rgba(10, 132, 255, 0.15);
-            --glass-indigo: rgba(94, 92, 230, 0.15);
-            --glass-purple: rgba(191, 90, 242, 0.15);
-            --glass-pink: rgba(255, 55, 95, 0.15);
+            /* Apple Liquid Glass - Ultra Thin Materials */
+            --glass-ultra-thin: rgba(255, 255, 255, 0.02);
+            --glass-thin: rgba(255, 255, 255, 0.04);
+            --glass-regular: rgba(255, 255, 255, 0.06);
+
+            /* Vibrancy Colors - Very Subtle */
+            --vibrancy-blue: rgba(10, 132, 255, 0.08);
+            --vibrancy-indigo: rgba(94, 92, 230, 0.06);
+            --vibrancy-purple: rgba(191, 90, 242, 0.05);
+            --vibrancy-pink: rgba(255, 55, 95, 0.04);
 
             /* Accent Colors */
             --accent-blue: #0a84ff;
@@ -53,19 +58,14 @@
             --accent-purple: #bf5af2;
             --accent-green: #32d74b;
 
-            /* Glass Materials - Extra transparent */
-            --glass-light: rgba(255, 255, 255, 0.05);
-            --glass-medium: rgba(255, 255, 255, 0.08);
-            --glass-heavy: rgba(255, 255, 255, 0.12);
+            /* Text - High Contrast */
+            --text-primary: rgba(255, 255, 255, 0.98);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.45);
 
-            /* Text with glow */
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --text-tertiary: rgba(255, 255, 255, 0.4);
-
-            /* Glass borders with glow */
-            --border-glow: rgba(255, 255, 255, 0.2);
-            --border-dim: rgba(255, 255, 255, 0.1);
+            /* Borders - Ultra Subtle */
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(255, 255, 255, 0.15);
         }
 
         body {
@@ -81,7 +81,7 @@
             position: relative;
         }
 
-        /* Animated Liquid Glass Background - Like Windows Vista/macOS Big Sur */
+        /* Apple Liquid Glass Background - Ultra Subtle Mesh */
         body::before {
             content: '';
             position: fixed;
@@ -90,20 +90,27 @@
             right: -50%;
             bottom: -50%;
             background:
-                radial-gradient(circle at 20% 30%, rgba(10, 132, 255, 0.25) 0%, transparent 30%),
-                radial-gradient(circle at 80% 70%, rgba(94, 92, 230, 0.2) 0%, transparent 35%),
-                radial-gradient(circle at 40% 80%, rgba(191, 90, 242, 0.18) 0%, transparent 30%),
-                radial-gradient(circle at 60% 20%, rgba(255, 55, 95, 0.15) 0%, transparent 30%);
-            animation: liquidFloat 20s ease-in-out infinite;
+                radial-gradient(ellipse at 15% 25%, rgba(10, 132, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 75%, rgba(94, 92, 230, 0.10) 0%, transparent 45%),
+                radial-gradient(ellipse at 45% 85%, rgba(191, 90, 242, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 55% 15%, rgba(255, 55, 95, 0.06) 0%, transparent 35%);
+            animation: meshFloat 30s ease-in-out infinite;
             z-index: 0;
             pointer-events: none;
-            filter: blur(80px);
+            filter: blur(120px);
+            opacity: 0.6;
         }
 
-        @keyframes liquidFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+        @keyframes meshFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(20px, -15px) scale(1.05) rotate(1deg);
+            }
+            66% {
+                transform: translate(-15px, 20px) scale(0.95) rotate(-1deg);
+            }
         }
 
         .container {
@@ -204,71 +211,65 @@
             margin-bottom: 24px;
         }
 
-        /* Liquid Glass Widget - Windows Vista Style */
+        /* Apple Liquid Glass Widget - Ultra Thin Material */
         .widget {
-            background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.08) 0%,
-                rgba(255, 255, 255, 0.03) 100%);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 28px;
+            background: var(--glass-ultra-thin);
+            backdrop-filter: blur(160px) saturate(180%);
+            -webkit-backdrop-filter: blur(160px) saturate(180%);
+            border-radius: 32px;
+            border: 0.33px solid var(--border-glass);
+            padding: 32px;
             position: relative;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: glassSlideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: glassReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) backwards;
             box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+                0 8px 40px rgba(0, 0, 0, 0.2),
+                0 1px 2px rgba(0, 0, 0, 0.1),
+                inset 0 0.5px 0 rgba(255, 255, 255, 0.08),
+                inset 0 -0.5px 0 rgba(255, 255, 255, 0.02);
         }
 
-        /* Glass reflection effect */
+        /* Ultra-subtle vibrancy layer */
         .widget::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 50%;
+            height: 60%;
             background: linear-gradient(180deg,
-                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.03) 0%,
                 transparent 100%
             );
-            border-radius: 24px 24px 0 0;
+            border-radius: 32px 32px 0 0;
             pointer-events: none;
         }
 
-        /* Glass glow on hover */
+        /* Subtle accent glow on hover */
         .widget::after {
             content: '';
             position: absolute;
-            inset: -1px;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg,
-                rgba(10, 132, 255, 0.4),
-                rgba(94, 92, 230, 0.4),
-                rgba(191, 90, 242, 0.4));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
+            inset: 0;
+            border-radius: 32px;
+            background: radial-gradient(
+                circle at 50% 0%,
+                var(--vibrancy-blue),
+                transparent 60%
+            );
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .widget:hover {
-            background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.12) 0%,
-                rgba(255, 255, 255, 0.06) 100%);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-4px) scale(1.01);
+            background: var(--glass-thin);
+            border-color: var(--border-highlight);
+            transform: translateY(-3px);
             box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.4),
-                0 0 40px rgba(10, 132, 255, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+                0 16px 60px rgba(0, 0, 0, 0.25),
+                0 2px 8px rgba(0, 0, 0, 0.15),
+                0 0 1px rgba(10, 132, 255, 0.1),
+                inset 0 0.5px 0 rgba(255, 255, 255, 0.12);
         }
 
         .widget:hover::after {
@@ -276,19 +277,19 @@
         }
 
         .widget:active {
-            transform: translateY(-2px) scale(0.99);
-            transition-duration: 0.15s;
+            transform: translateY(-1px) scale(0.995);
+            transition-duration: 0.2s;
         }
 
-        @keyframes glassSlideIn {
+        @keyframes glassReveal {
             from {
                 opacity: 0;
-                transform: translateY(30px);
-                filter: blur(10px);
+                transform: translateY(40px) scale(0.98);
+                filter: blur(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
                 filter: blur(0);
             }
         }
@@ -455,18 +456,54 @@
             transition-duration: 0.1s;
         }
 
+        /* Calendar View Controls */
+        .calendar-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 4px;
+            background: var(--glass-ultra-thin);
+            border-radius: 16px;
+            border: 0.33px solid var(--border-glass);
+        }
+
+        .view-button {
+            flex: 1;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .view-button:hover {
+            color: var(--text-primary);
+            background: var(--glass-thin);
+        }
+
+        .view-button.active {
+            color: var(--text-primary);
+            background: var(--glass-regular);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
         /* Glass Calendar Container */
         #calendar-container {
-            min-height: 400px;
-            border-radius: 20px;
+            min-height: 500px;
+            border-radius: 24px;
             overflow: hidden;
-            background: linear-gradient(135deg,
-                rgba(0, 0, 0, 0.3),
-                rgba(0, 0, 0, 0.2));
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            background: var(--glass-ultra-thin);
+            backdrop-filter: blur(80px);
+            -webkit-backdrop-filter: blur(80px);
+            border: 0.33px solid var(--border-glass);
+            box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.05);
         }
 
         .calendar-placeholder {
@@ -529,12 +566,13 @@
             }
         }
 
-        /* Stagger glass animations */
+        /* Stagger glass reveal animations */
         .widget:nth-child(1) { animation-delay: 0.1s; }
-        .widget:nth-child(2) { animation-delay: 0.2s; }
-        .widget:nth-child(3) { animation-delay: 0.3s; }
-        .widget:nth-child(4) { animation-delay: 0.4s; }
-        .widget:nth-child(5) { animation-delay: 0.5s; }
+        .widget:nth-child(2) { animation-delay: 0.15s; }
+        .widget:nth-child(3) { animation-delay: 0.2s; }
+        .widget:nth-child(4) { animation-delay: 0.25s; }
+        .widget:nth-child(5) { animation-delay: 0.3s; }
+        .widget:nth-child(6) { animation-delay: 0.35s; }
 
         /* Responsive - iOS/iPad */
         @media (max-width: 768px) {
@@ -606,6 +644,11 @@
                         <div class="widget-title">Kalender</div>
                         <div class="widget-subtitle">Google Calendar</div>
                     </div>
+                </div>
+                <div class="calendar-controls" id="calendar-controls" style="display: none;">
+                    <button class="view-button active" onclick="switchView('day')" id="btn-day">Dag</button>
+                    <button class="view-button" onclick="switchView('week')" id="btn-week">Uge</button>
+                    <button class="view-button" onclick="switchView('month')" id="btn-month">Måned</button>
                 </div>
                 <div id="calendar-container">
                     <div class="calendar-placeholder">
@@ -749,9 +792,30 @@ Calendar ID format: din@gmail.com`;
             }
         }
 
-        // Load Google Calendar
-        function loadGoogleCalendar(urlOrId) {
+        // Current calendar state
+        let currentCalendarId = null;
+        let currentView = 'week'; // Default to week view
+
+        // Switch calendar view
+        function switchView(view) {
+            currentView = view;
+
+            // Update button states
+            document.querySelectorAll('.view-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`btn-${view}`).classList.add('active');
+
+            // Reload calendar with new view
+            if (currentCalendarId) {
+                loadGoogleCalendar(currentCalendarId, view);
+            }
+        }
+
+        // Load Google Calendar with specified view
+        function loadGoogleCalendar(urlOrId, view = currentView) {
             const container = document.getElementById('calendar-container');
+            const controls = document.getElementById('calendar-controls');
 
             let calendarId = urlOrId;
             if (urlOrId.includes('calendar.google.com')) {
@@ -759,11 +823,25 @@ Calendar ID format: din@gmail.com`;
                 if (match) calendarId = decodeURIComponent(match[1]);
             }
 
+            currentCalendarId = calendarId;
+
+            // Show calendar controls
+            controls.style.display = 'flex';
+
+            // Map view to Google Calendar modes
+            const viewModes = {
+                'day': 'AGENDA',   // Day view shows agenda
+                'week': 'WEEK',    // Week view
+                'month': 'MONTH'   // Month view
+            };
+
+            const mode = viewModes[view] || 'WEEK';
+
             const iframe = document.createElement('iframe');
-            iframe.src = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=Europe/Copenhagen&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA&bgcolor=%231c1c1e&color=%230a84ff`;
-            iframe.style.cssText = 'border: 0; width: 100%; height: 500px; border-radius: 20px;';
+            iframe.src = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=Europe/Copenhagen&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=${mode}&bgcolor=%23000000&color=%230a84ff`;
+            iframe.style.cssText = 'border: 0; width: 100%; height: 600px; border-radius: 24px; background: transparent;';
             iframe.frameBorder = '0';
-            iframe.scrolling = 'no';
+            iframe.scrolling = 'yes';
 
             container.innerHTML = '';
             container.appendChild(iframe);
