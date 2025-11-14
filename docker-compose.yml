@@ -98,6 +98,84 @@ services:
       postgres:
         condition: service_healthy
 
+  # Redis - Cache for Docmost
+  redis:
+    image: redis:7-alpine
+    container_name: homeserver-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - homeserver-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Docmost - Modern Wiki & Documentation Platform
+  docmost:
+    image: docmost/docmost:latest
+    container_name: homeserver-docmost
+    restart: unless-stopped
+    ports:
+      - "${DOCMOST_PORT:-3000}:3000"
+    environment:
+      - APP_URL=${DOCMOST_APP_URL:-http://localhost:3000}
+      - APP_SECRET=${DOCMOST_APP_SECRET}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${DOCMOST_DB:-docmost}
+      - REDIS_URL=redis://redis:6379
+      - MAIL_DRIVER=${DOCMOST_MAIL_DRIVER:-smtp}
+      - MAIL_FROM_ADDRESS=${DOCMOST_MAIL_FROM:-noreply@kobber.me}
+      - MAIL_FROM_NAME=${DOCMOST_MAIL_FROM_NAME:-Docmost}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_SECURE=${SMTP_SECURE:-true}
+    volumes:
+      - docmost_data:/app/data/storage
+    networks:
+      - homeserver-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Strapi - Headless CMS
+  strapi:
+    image: strapi/strapi:latest
+    container_name: homeserver-strapi
+    restart: unless-stopped
+    ports:
+      - "${STRAPI_PORT:-1337}:1337"
+    environment:
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=${STRAPI_DB:-strapi}
+      - DATABASE_USERNAME=${POSTGRES_USER:-postgres}
+      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - DATABASE_SSL=false
+      - JWT_SECRET=${STRAPI_JWT_SECRET}
+      - ADMIN_JWT_SECRET=${STRAPI_ADMIN_JWT_SECRET}
+      - APP_KEYS=${STRAPI_APP_KEYS}
+      - API_TOKEN_SALT=${STRAPI_API_TOKEN_SALT}
+      - TRANSFER_TOKEN_SALT=${STRAPI_TRANSFER_TOKEN_SALT}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM=${STRAPI_MAIL_FROM:-noreply@kobber.me}
+    volumes:
+      - strapi_data:/srv/app
+    networks:
+      - homeserver-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   # Dashboard - Landing page til alle services
   dashboard:
     image: nginx:alpine
@@ -141,6 +219,8 @@ services:
       - n8n
       - nocodb
       - nextcloud
+      - docmost
+      - strapi
       - dashboard
       - portainer
 
@@ -162,6 +242,12 @@ volumes:
   nextcloud_config:
     driver: local
   nextcloud_data_files:
+    driver: local
+  redis_data:
+    driver: local
+  docmost_data:
+    driver: local
+  strapi_data:
     driver: local
   portainer_data:
     driver: local
