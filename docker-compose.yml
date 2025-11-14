@@ -134,18 +134,24 @@ services:
     command: >
       bash -c "
       apt-get update -qq &&
-      apt-get install -y build-essential libpq-dev nodejs postgresql-client &&
+      apt-get install -y build-essential libpq-dev nodejs postgresql-client git &&
       if [ ! -f Gemfile ]; then
+        echo '🚀 Opretter ny Rails app...' &&
         gem install rails -v '~> 7.0' &&
         rails new . --database=postgresql --skip-git --force &&
         echo \"gem 'spree', '~> 4.6'\" >> Gemfile &&
         echo \"gem 'spree_auth_devise', '~> 4.6'\" >> Gemfile &&
-        echo \"gem 'spree_gateway', '~> 3.10'\" >> Gemfile &&
-        bundle install &&
+        echo \"gem 'spree_gateway', '~> 3.10'\" >> Gemfile;
+      fi &&
+      echo '📦 Installerer gems...' &&
+      bundle install &&
+      if ! bundle exec rails runner 'Spree' 2>/dev/null; then
+        echo '🛒 Installerer Spree...' &&
         bundle exec rails g spree:install --user_class=Spree::User --admin_email=${SPREE_ADMIN_EMAIL} --admin_password=${SPREE_ADMIN_PASSWORD} --auto-accept &&
         bundle exec rails db:migrate &&
         bundle exec rails db:seed;
       fi &&
+      echo '✅ Starter Rails server...' &&
       bundle exec rails server -b 0.0.0.0 -p 3000
       "
 
