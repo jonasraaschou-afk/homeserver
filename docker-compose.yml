@@ -138,8 +138,6 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${SPREE_DB:-spree}
       - RAILS_ENV=production
       - SECRET_KEY_BASE=${SPREE_SECRET_KEY_BASE:-changeme}
-      - SPREE_ADMIN_EMAIL=${SPREE_ADMIN_EMAIL:-admin@example.com}
-      - SPREE_ADMIN_PASSWORD=${SPREE_ADMIN_PASSWORD:-spree123}
     volumes:
       - spree_data:/app/public/spree
     networks:
