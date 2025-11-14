@@ -127,32 +127,6 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Spree Commerce - E-commerce Platform
-  spree:
-    image: registry.gitlab.com/spree/spree:latest
-    container_name: homeserver-spree
-    restart: unless-stopped
-    ports:
-      - "${SPREE_PORT:-3000}:3000"
-    environment:
-      - DB_ADAPTER=postgresql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=${SPREE_DB:-spree}
-      - DB_USERNAME=${POSTGRES_USER:-postgres}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - RAILS_ENV=development
-      - RAILS_SERVE_STATIC_FILES=true
-      - RAILS_LOG_TO_STDOUT=true
-    volumes:
-      - spree_data:/app/public/spree
-    networks:
-      - homeserver-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: ["bash", "-c", "bundle exec rails db:create db:migrate db:seed && bundle exec rails server -b 0.0.0.0 -p 3000"]
-
   # Cloudflare Tunnel - Sikker adgang til internettet
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -169,7 +143,6 @@ services:
       - nextcloud
       - dashboard
       - portainer
-      - spree
 
 networks:
   homeserver-network:
