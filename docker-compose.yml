@@ -128,7 +128,7 @@ services:
 
   # Spree Commerce - E-commerce Platform
   spree:
-    image: sparksolutions/spree-commerce:latest
+    image: spreecommerce/spree:latest
     container_name: homeserver-spree
     restart: unless-stopped
     ports:
