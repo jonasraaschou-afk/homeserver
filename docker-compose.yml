@@ -129,15 +129,21 @@ services:
 
   # Spree Commerce - E-commerce Platform
   spree:
-    image: spreecommerce/spree:latest
+    image: registry.gitlab.com/spree/spree:latest
     container_name: homeserver-spree
     restart: unless-stopped
     ports:
       - "${SPREE_PORT:-3000}:3000"
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${SPREE_DB:-spree}
-      - RAILS_ENV=production
-      - SECRET_KEY_BASE=${SPREE_SECRET_KEY_BASE:-changeme}
+      - DB_ADAPTER=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${SPREE_DB:-spree}
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - RAILS_ENV=development
+      - RAILS_SERVE_STATIC_FILES=true
+      - RAILS_LOG_TO_STDOUT=true
     volumes:
       - spree_data:/app/public/spree
     networks:
@@ -145,6 +151,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    command: ["bash", "-c", "bundle exec rails db:create db:migrate db:seed && bundle exec rails server -b 0.0.0.0 -p 3000"]
 
   # Cloudflare Tunnel - Sikker adgang til internettet
   cloudflared:
