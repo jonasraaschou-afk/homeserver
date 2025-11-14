@@ -111,6 +111,44 @@ services:
     networks:
       - homeserver-network
 
+  # Spree Commerce - E-commerce Platform
+  spree:
+    image: ruby:3.2-slim
+    container_name: homeserver-spree
+    restart: unless-stopped
+    ports:
+      - "${SPREE_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${SPREE_DB:-spree}
+      - SECRET_KEY_BASE=${SPREE_SECRET_KEY_BASE}
+      - RAILS_ENV=development
+      - RAILS_LOG_TO_STDOUT=true
+    working_dir: /app
+    volumes:
+      - spree_data:/app
+    networks:
+      - homeserver-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      bash -c "
+      apt-get update -qq &&
+      apt-get install -y build-essential libpq-dev nodejs postgresql-client &&
+      if [ ! -f Gemfile ]; then
+        gem install rails -v '~> 7.0' &&
+        rails new . --database=postgresql --skip-git --force &&
+        echo \"gem 'spree', '~> 4.6'\" >> Gemfile &&
+        echo \"gem 'spree_auth_devise', '~> 4.6'\" >> Gemfile &&
+        echo \"gem 'spree_gateway', '~> 3.10'\" >> Gemfile &&
+        bundle install &&
+        bundle exec rails g spree:install --user_class=Spree::User --admin_email=${SPREE_ADMIN_EMAIL} --admin_password=${SPREE_ADMIN_PASSWORD} --auto-accept &&
+        bundle exec rails db:migrate &&
+        bundle exec rails db:seed;
+      fi &&
+      bundle exec rails server -b 0.0.0.0 -p 3000
+      "
+
   # Portainer - Docker Management UI
   portainer:
     image: portainer/portainer-ce:latest
@@ -143,6 +181,7 @@ services:
       - nextcloud
       - dashboard
       - portainer
+      - spree
 
 networks:
   homeserver-network:
