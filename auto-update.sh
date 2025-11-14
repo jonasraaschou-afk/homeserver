@@ -7,7 +7,7 @@ set -e
 
 # Konfiguration
 REPO_DIR="/Users/$(whoami)/homeserver"  # Juster hvis nødvendigt
-BRANCH="main"  # Eller din foretrukne branch
+BRANCH=$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)  # Brug nuværende branch
 LOG_FILE="$REPO_DIR/auto-update.log"
 MAX_LOG_SIZE=10485760  # 10MB
 
@@ -82,9 +82,12 @@ if [ "$STASHED" = true ]; then
     }
 fi
 
+# Tjek hvilke filer der er ændret
+CHANGED_FILES=$(git diff HEAD@{1} --name-only)
+
 # Tjek om docker-compose.yml er ændret
-if git diff HEAD@{1} --name-only | grep -q "docker-compose.yml\|.env.example"; then
-    log "Docker konfiguration ændret - opdaterer containers..."
+if echo "$CHANGED_FILES" | grep -q "docker-compose.yml\|.env.example"; then
+    log "Docker konfiguration ændret - opdaterer alle containers..."
 
     # Pull nye images
     log "Henter nye Docker images..."
@@ -102,9 +105,15 @@ if git diff HEAD@{1} --name-only | grep -q "docker-compose.yml\|.env.example"; t
     log "Service status:"
     docker-compose ps 2>&1 | tee -a "$LOG_FILE"
 
-    log "✅ Opdatering gennemført med container restart!"
+    log "✅ Opdatering gennemført med fuld container restart!"
+elif echo "$CHANGED_FILES" | grep -q "dashboard/"; then
+    log "Dashboard filer ændret - genstarter kun dashboard..."
+
+    docker-compose restart dashboard 2>&1 | tee -a "$LOG_FILE"
+
+    log "✅ Dashboard opdateret og genstartet!"
 else
-    log "Kun kode/dokumentation ændret - ingen container restart nødvendig"
+    log "Kun dokumentation ændret - ingen container restart nødvendig"
     log "✅ Opdatering gennemført!"
 fi
 
