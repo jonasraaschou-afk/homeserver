@@ -111,52 +111,6 @@ services:
     networks:
       - homeserver-network
 
-  # Redis - Cache for Spree Commerce
-  redis:
-    image: redis:6.2-alpine
-    container_name: homeserver-redis
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
-    networks:
-      - homeserver-network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Spree Commerce - E-commerce Platform
-  spree:
-    image: spreecommerce/spree:latest
-    container_name: homeserver-spree
-    restart: unless-stopped
-    ports:
-      - "${SPREE_PORT:-3000}:3000"
-    environment:
-      - REDIS_URL=redis://redis:6379/0
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=${POSTGRES_USER:-postgres}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${SPREE_DB:-spree}
-      - SECRET_KEY_BASE=${SPREE_SECRET_KEY_BASE}
-      - ALLOWED_ORIGIN_HOSTS=*
-      - RACK_CORS_DEBUG=true
-      - DISABLE_SPRING=1
-      - BROWSER=/dev/null
-    volumes:
-      - spree_data:/app
-      - spree_bundle:/bundle
-    networks:
-      - homeserver-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: bash -c "rm -rf tmp/pids/server.pid && bundle exec rails s -b 0.0.0.0 -p 3000"
-
   # Portainer - Docker Management UI
   portainer:
     image: portainer/portainer-ce:latest
@@ -189,8 +143,6 @@ services:
       - nextcloud
       - dashboard
       - portainer
-      - redis
-      - spree
 
 networks:
   homeserver-network:
@@ -212,10 +164,4 @@ volumes:
   nextcloud_data_files:
     driver: local
   portainer_data:
-    driver: local
-  redis_data:
-    driver: local
-  spree_data:
-    driver: local
-  spree_bundle:
     driver: local
