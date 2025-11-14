@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kobber-v2';
+const CACHE_NAME = 'kobber-v3-liquid-glass';
 const urlsToCache = [
   '/',
   '/index.html',
