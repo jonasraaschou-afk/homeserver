@@ -127,6 +127,27 @@ services:
     security_opt:
       - no-new-privileges:true
 
+  # Spree Commerce - E-commerce Platform
+  spree:
+    image: spreecommerce/spree:latest
+    container_name: homeserver-spree
+    restart: unless-stopped
+    ports:
+      - "${SPREE_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${SPREE_DB:-spree}
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=${SPREE_SECRET_KEY_BASE:-changeme}
+      - SPREE_ADMIN_EMAIL=${SPREE_ADMIN_EMAIL:-admin@example.com}
+      - SPREE_ADMIN_PASSWORD=${SPREE_ADMIN_PASSWORD:-spree123}
+    volumes:
+      - spree_data:/app/public/spree
+    networks:
+      - homeserver-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   # Cloudflare Tunnel - Sikker adgang til internettet
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -143,6 +164,7 @@ services:
       - nextcloud
       - dashboard
       - portainer
+      - spree
 
 networks:
   homeserver-network:
@@ -164,4 +186,6 @@ volumes:
   nextcloud_data_files:
     driver: local
   portainer_data:
+    driver: local
+  spree_data:
     driver: local
