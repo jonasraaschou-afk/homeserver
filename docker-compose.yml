@@ -16,7 +16,7 @@ services:
     networks:
       - homeserver-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -200,8 +200,6 @@ services:
     depends_on:
       dashboard:
         condition: service_started
-      postgres:
-        condition: service_healthy
 
 networks:
   homeserver-network:
