@@ -78,9 +78,7 @@ Opdater `DOCMOST_APP_URL` i din `.env` fil til dit offentlige domæne:
 DOCMOST_APP_URL=http://localhost:3000
 
 # Korrekt
-DOCMOST_APP_URL=https://docmost.kobber.me
-# eller
-DOCMOST_APP_URL=https://docs.kobber.me
+DOCMOST_APP_URL=https://wiki.kobber.me
 ```
 
 Genstart derefter Docmost:
