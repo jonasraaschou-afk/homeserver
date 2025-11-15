@@ -3,9 +3,9 @@ version: '3.8'
 services:
   # PostgreSQL Database - Delt database for n8n og NocoDB
   postgres:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: homeserver-postgres
-    restart: unless-stopped
+    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -25,7 +25,7 @@ services:
   n8n:
     image: n8nio/n8n:latest
     container_name: homeserver-n8n
-    restart: unless-stopped
+    restart: always
     ports:
       - "${N8N_PORT:-5678}:5678"
     environment:
@@ -62,7 +62,7 @@ services:
   nocodb:
     image: nocodb/nocodb:latest
     container_name: homeserver-nocodb
-    restart: unless-stopped
+    restart: always
     ports:
       - "${NOCODB_PORT:-8080}:8080"
     environment:
@@ -82,7 +82,7 @@ services:
   nextcloud:
     image: nextcloud:latest
     container_name: homeserver-nextcloud
-    restart: unless-stopped
+    restart: always
     ports:
       - "${NEXTCLOUD_PORT:-8081}:80"
     environment:
@@ -115,9 +115,9 @@ services:
 
   # Redis - Cache for Docmost
   redis:
-    image: redis:7-alpine
+    image: redis:alpine
     container_name: homeserver-redis
-    restart: unless-stopped
+    restart: always
     volumes:
       - redis_data:/data
     networks:
@@ -132,7 +132,7 @@ services:
   docmost:
     image: docmost/docmost:latest
     container_name: homeserver-docmost
-    restart: unless-stopped
+    restart: always
     ports:
       - "${DOCMOST_PORT:-3000}:3000"
     environment:
@@ -162,7 +162,7 @@ services:
   strapi:
     image: strapi/strapi:latest
     container_name: homeserver-strapi
-    restart: unless-stopped
+    restart: always
     ports:
       - "${STRAPI_PORT:-1337}:1337"
     environment:
@@ -195,7 +195,7 @@ services:
   dashboard:
     image: nginx:alpine
     container_name: homeserver-dashboard
-    restart: unless-stopped
+    restart: always
     ports:
       - "${DASHBOARD_PORT:-8082}:80"
     volumes:
@@ -208,7 +208,7 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     container_name: homeserver-portainer
-    restart: unless-stopped
+    restart: always
     ports:
       - "${PORTAINER_PORT:-9000}:9000"
       - "${PORTAINER_EDGE_PORT:-8000}:8000"
@@ -224,7 +224,7 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: homeserver-cloudflared
-    restart: unless-stopped
+    restart: always
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
