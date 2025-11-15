@@ -10,10 +10,15 @@ Et komplet Docker-baseret homeserver setup til Mac mini med n8n, PostgreSQL, Noc
 
 ## 📋 Services
 
-- **PostgreSQL 15** - Fælles database for alle services
+- **PostgreSQL 16** - Fælles database for alle services
 - **n8n** - Workflow automation platform (port 5678)
 - **NocoDB** - No-code database platform (port 8080)
 - **Nextcloud** - Cloud storage og collaboration (port 8081)
+- **Docmost** - Modern wiki & documentation platform (port 3000)
+- **Strapi** - Headless CMS (port 1337)
+- **Dashboard** - Premium landing page til alle services (port 8082)
+- **Portainer** - Docker management UI (port 9000)
+- **Redis** - Cache for Docmost
 - **Cloudflare Tunnel** - Sikker adgang til internettet uden port forwarding
 
 ## 🚀 Hurtig Start
@@ -64,6 +69,10 @@ Se også: **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)**
 
 ## 🔐 Standard Login Credentials
 
+**Dashboard:**
+- URL: http://localhost:8082 (eller din Cloudflare URL)
+- Ingen login påkrævet - direkte adgang til alle services
+
 **n8n:**
 - URL: http://localhost:5678 (eller din Cloudflare URL)
 - Bruger: Se `N8N_BASIC_AUTH_USER` i `.env`
@@ -77,6 +86,18 @@ Se også: **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)**
 - URL: http://localhost:8081 (eller din Cloudflare URL)
 - Bruger: Se `NEXTCLOUD_ADMIN_USER` i `.env`
 - Password: Se `NEXTCLOUD_ADMIN_PASSWORD` i `.env`
+
+**Docmost:**
+- URL: http://localhost:3000 (eller din Cloudflare URL)
+- Første gang opretter du en admin bruger
+
+**Strapi:**
+- URL: http://localhost:1337 (eller din Cloudflare URL)
+- Første gang opretter du en admin bruger
+
+**Portainer:**
+- URL: http://localhost:9000 (eller din Cloudflare URL)
+- Første gang opretter du en admin bruger
 
 ## 🔄 Automatisk Deployment fra GitHub
 
@@ -102,10 +123,16 @@ cd ~/homeserver
 ## 📦 Data Persistens
 
 Alle data gemmes i Docker volumes:
-- `postgres_data` - Database data
+- `postgres_data` - Database data (delt mellem alle services)
 - `n8n_data` - n8n workflows og credentials
 - `nocodb_data` - NocoDB data
-- `nextcloud_data*` - Nextcloud filer og konfiguration
+- `nextcloud_data*` - Nextcloud filer og konfiguration (4 separate volumes)
+- `docmost_data` - Docmost dokumentation og uploads
+- `strapi_data` - Strapi CMS indhold
+- `redis_data` - Redis cache data
+- `portainer_data` - Portainer konfiguration
+
+**Note:** Dashboard bruger ingen volumes - al HTML/CSS/JS er i `./dashboard` mappen
 
 ### Backup
 
@@ -145,13 +172,49 @@ docker-compose up -d
 
 ## 🔧 Troubleshooting
 
+### Volume Permission Fejl (Nextcloud)
+Hvis du får fejl som `mkdir /host_mnt/Volumes/docker: permission denied`:
+
+```bash
+# Stop alle services
+docker-compose down
+
+# Ryd gamle volumes (ADVARSEL: sletter data!)
+docker volume prune -f
+
+# Eller slet specifikke nextcloud volumes
+docker volume rm homeserver_nextcloud_data homeserver_nextcloud_apps homeserver_nextcloud_config homeserver_nextcloud_data_files
+
+# Start igen
+docker-compose up -d
+```
+
+**Alternativ løsning:**
+```bash
+# Verificer at Docker Desktop har adgang til korrekte mapper
+# Docker Desktop > Settings > Resources > File Sharing
+# Tilføj din projekt mappe hvis nødvendigt
+```
+
+### Dashboard viser gammel version
+```bash
+# Force refresh af dashboard container
+docker-compose restart dashboard
+
+# Eller genbyg helt fra scratch
+docker-compose down dashboard
+docker-compose up -d dashboard
+
+# I browseren: Hard refresh (Cmd+Shift+R på Mac, Ctrl+Shift+R på Windows)
+```
+
 ### Services starter ikke
 ```bash
 # Check logs
 docker-compose logs
 
 # Genstart alt
-docker-compose down -v
+docker-compose down
 docker-compose up -d
 ```
 
@@ -180,6 +243,10 @@ Rediger porte i `.env` filen:
 N8N_PORT=5679
 NOCODB_PORT=8082
 NEXTCLOUD_PORT=8083
+DOCMOST_PORT=3001
+STRAPI_PORT=1338
+DASHBOARD_PORT=8084
+PORTAINER_PORT=9001
 ```
 
 ## 📚 Yderligere Ressourcer

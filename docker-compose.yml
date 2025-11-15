@@ -231,13 +231,10 @@ services:
     networks:
       - homeserver-network
     depends_on:
-      - n8n
-      - nocodb
-      - nextcloud
-      - docmost
-      - strapi
-      - dashboard
-      - portainer
+      dashboard:
+        condition: service_started
+      postgres:
+        condition: service_healthy
 
 networks:
   homeserver-network:
