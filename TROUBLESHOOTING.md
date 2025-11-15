@@ -1,12 +1,12 @@
 # Troubleshooting Guide
 
-## Docmost og Strapi virker ikke
+## Docmost virker ikke
 
 ### Problem
-Docmost og/eller Strapi kan ikke starte eller viser database fejl i logs.
+Docmost kan ikke starte eller viser database fejl i logs.
 
 ### Årsag
-`init-db.sql` bliver kun kørt når PostgreSQL containeren oprettes **første gang**. Hvis du har startet din PostgreSQL container før Docmost og Strapi blev tilføjet, eksisterer deres databaser ikke.
+`init-db.sql` bliver kun kørt når PostgreSQL containeren oprettes **første gang**. Hvis du har startet din PostgreSQL container før Docmost blev tilføjet, eksisterer databasen ikke.
 
 ### Løsning
 
@@ -28,21 +28,12 @@ Scriptet vil:
 ```bash
 # Genstart Docmost
 docker compose restart docmost
-
-# Genstart Strapi
-docker compose restart strapi
 ```
 
 #### 3. Tjek logs
 ```bash
-# Se logs for begge services
-docker compose logs -f docmost strapi
-
 # Kun Docmost
 docker compose logs -f docmost
-
-# Kun Strapi
-docker compose logs -f strapi
 ```
 
 ### Manuel database oprettelse
@@ -53,13 +44,11 @@ Hvis scriptet ikke virker, kan du oprette databasene manuelt:
 # Tilslut til PostgreSQL container
 docker exec -it homeserver-postgres psql -U postgres
 
-# Opret databaser
+# Opret database
 CREATE DATABASE docmost;
-CREATE DATABASE strapi;
 
 # Grant rettigheder
 GRANT ALL PRIVILEGES ON DATABASE docmost TO postgres;
-GRANT ALL PRIVILEGES ON DATABASE strapi TO postgres;
 
 # Afslut
 \q
@@ -106,7 +95,7 @@ docker compose restart docmost
 
 3. **Genstart services**:
    ```bash
-   docker compose restart docmost strapi n8n nextcloud
+   docker compose restart docmost n8n nextcloud
    ```
 
 ## Database connection fejl
@@ -133,7 +122,7 @@ docker compose restart postgres
 sleep 10
 
 # Genstart alle services der bruger databasen
-docker compose restart n8n nocodb nextcloud docmost strapi
+docker compose restart n8n nocodb nextcloud docmost
 ```
 
 ## Container starter ikke

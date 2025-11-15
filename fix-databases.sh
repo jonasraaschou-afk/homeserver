@@ -14,7 +14,7 @@ echo "⏳ Venter på at PostgreSQL er klar..."
 sleep 5
 
 # Liste over databaser der skal eksistere
-databases=("n8n" "nocodb" "nextcloud" "docmost" "strapi")
+databases=("n8n" "nocodb" "nextcloud" "docmost")
 
 # Tjek og opret hver database
 for db in "${databases[@]}"; do
@@ -38,5 +38,4 @@ echo "🎉 Alle databaser er nu oprettet!"
 echo ""
 echo "Næste skridt:"
 echo "1. Genstart Docmost: docker compose restart docmost"
-echo "2. Genstart Strapi: docker compose restart strapi"
-echo "3. Tjek logs: docker compose logs -f docmost strapi"
+echo "2. Tjek logs: docker compose logs -f docmost"

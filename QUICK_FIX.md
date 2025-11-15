@@ -109,7 +109,6 @@ docker-compose ps
 # - homeserver-n8n (up)
 # - homeserver-nocodb (up)
 # - homeserver-docmost (up)
-# - homeserver-strapi (up)
 # - homeserver-dashboard (up)
 # - homeserver-portainer (up)
 # - homeserver-cloudflared (up)
@@ -141,11 +140,6 @@ cp .env.example .env
 # - N8N_BASIC_AUTH_PASSWORD
 # - NEXTCLOUD_ADMIN_PASSWORD
 # - DOCMOST_APP_SECRET
-# - STRAPI_JWT_SECRET
-# - STRAPI_ADMIN_JWT_SECRET
-# - STRAPI_APP_KEYS
-# - STRAPI_API_TOKEN_SALT
-# - STRAPI_TRANSFER_TOKEN_SALT
 # - CLOUDFLARE_TUNNEL_TOKEN (valgfrit)
 
 # Generer tilfældige secrets:
@@ -193,7 +187,6 @@ docker-compose logs -f
    lsof -i :8080  # nocodb
    lsof -i :8081  # nextcloud
    lsof -i :3000  # docmost
-   lsof -i :1337  # strapi
    lsof -i :8082  # dashboard
    lsof -i :9000  # portainer
    ```

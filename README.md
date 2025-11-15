@@ -15,7 +15,6 @@ Et komplet Docker-baseret homeserver setup til Mac mini med n8n, PostgreSQL, Noc
 - **NocoDB** - No-code database platform (port 8080)
 - **Nextcloud** - Cloud storage og collaboration (port 8081)
 - **Docmost** - Modern wiki & documentation platform (port 3000)
-- **Strapi** - Headless CMS (port 1337)
 - **Dashboard** - Premium landing page til alle services (port 8082)
 - **Portainer** - Docker management UI (port 9000)
 - **Redis** - Cache for Docmost
@@ -91,10 +90,6 @@ Se også: **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)**
 - URL: http://localhost:3000 (eller din Cloudflare URL)
 - Første gang opretter du en admin bruger
 
-**Strapi:**
-- URL: http://localhost:1337 (eller din Cloudflare URL)
-- Første gang opretter du en admin bruger
-
 **Portainer:**
 - URL: http://localhost:9000 (eller din Cloudflare URL)
 - Første gang opretter du en admin bruger
@@ -128,7 +123,6 @@ Alle data gemmes i Docker volumes:
 - `nocodb_data` - NocoDB data
 - `nextcloud_data*` - Nextcloud filer og konfiguration (4 separate volumes)
 - `docmost_data` - Docmost dokumentation og uploads
-- `strapi_data` - Strapi CMS indhold
 - `redis_data` - Redis cache data
 - `portainer_data` - Portainer konfiguration
 
@@ -244,7 +238,6 @@ N8N_PORT=5679
 NOCODB_PORT=8082
 NEXTCLOUD_PORT=8083
 DOCMOST_PORT=3001
-STRAPI_PORT=1338
 DASHBOARD_PORT=8084
 PORTAINER_PORT=9001
 ```
