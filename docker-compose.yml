@@ -158,39 +158,6 @@ services:
       redis:
         condition: service_healthy
 
-  # Strapi - Headless CMS
-  strapi:
-    image: strapi/strapi:latest
-    container_name: homeserver-strapi
-    restart: always
-    ports:
-      - "${STRAPI_PORT:-1337}:1337"
-    environment:
-      - DATABASE_CLIENT=postgres
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=${STRAPI_DB:-strapi}
-      - DATABASE_USERNAME=${POSTGRES_USER:-postgres}
-      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
-      - DATABASE_SSL=false
-      - JWT_SECRET=${STRAPI_JWT_SECRET}
-      - ADMIN_JWT_SECRET=${STRAPI_ADMIN_JWT_SECRET}
-      - APP_KEYS=${STRAPI_APP_KEYS}
-      - API_TOKEN_SALT=${STRAPI_API_TOKEN_SALT}
-      - TRANSFER_TOKEN_SALT=${STRAPI_TRANSFER_TOKEN_SALT}
-      - SMTP_HOST=${SMTP_HOST:-}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USERNAME=${SMTP_USERNAME:-}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
-      - SMTP_FROM=${STRAPI_MAIL_FROM:-noreply@kobber.me}
-    volumes:
-      - strapi_data:/srv/app
-    networks:
-      - homeserver-network
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   # Dashboard - Landing page til alle services
   dashboard:
     image: nginx:alpine
@@ -258,8 +225,6 @@ volumes:
   redis_data:
     driver: local
   docmost_data:
-    driver: local
-  strapi_data:
     driver: local
   portainer_data:
     driver: local
